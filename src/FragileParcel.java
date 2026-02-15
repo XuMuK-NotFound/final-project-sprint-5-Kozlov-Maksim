@@ -6,14 +6,14 @@ public class FragileParcel   extends Parcel implements Trackable {//хрупки
     }
 
     @Override
-    void packageItem(){
-        System.out.println("Посылка "+ this.getTrackNumber() + " обёрнута в защитную плёнку.");
-        System.out.println("Посылка "+ this.getTrackNumber() + " упакована.");
+    void packageItem(){//+ this.trackNumber +
+        System.out.println("Посылка "+ this.getDescription() + " обёрнута в защитную плёнку.");
+        System.out.println("Посылка "+ this.getDescription() + " упакована.");
 
     }
 
     public void reportStatus(String newLocation){
-        System.out.println("Хрупкая посылка"+ this.getTrackNumber() + "изменила местоположение на "+  newLocation +".");
+        System.out.println("Хрупкая посылка"+ this.getDescription() + "изменила местоположение на "+  newLocation +".");
 
     }
 }

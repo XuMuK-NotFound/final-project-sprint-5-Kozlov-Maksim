@@ -5,33 +5,51 @@ abstract class Parcel {
     final private int sendDay;
 
     //Для индивидуального трек номера заказа
-    final private String trackNumber;
-    final private int orderNumber;
-    static int countOrderNumbers = 0;
+    // final private String trackNumber;
+    //  final private int orderNumber;
+    // static int countOrderNumbers = 0;
 
     TypeParcel typeParcel;
 
     Parcel(String description, int weight, String deliveryAddress, int sendDay, TypeParcel typeParcel) {
-        countOrderNumbers++;
-        this.orderNumber = countOrderNumbers;
+        //  countOrderNumbers++;
+        // this.orderNumber = countOrderNumbers;
         this.description = description;
         this.weight = weight;
         this.deliveryAddress = deliveryAddress;
         this.sendDay = sendDay;
-        this.trackNumber = setTrackNumber(typeParcel, this.orderNumber);
+        //  this.trackNumber = setTrackNumber(typeParcel, this.orderNumber);
         this.typeParcel = typeParcel;
     }
 
-    // для  FragileParcel класса геттер
-    public String getTrackNumber() {
+    // для  FragileParcel класса геттер который не нужен был по заданию
+    /*  public String getTrackNumber() {
         return trackNumber;
+    }*/
+
+    public TypeParcel getTypeParcel() {
+        return typeParcel;
     }
 
-    void packageItem() {
-        System.out.println("Посылка " + this.trackNumber + " упакована.");
+    public String getDescription() {
+        return description;
     }
 
+    public int getSendDay() {
+        return sendDay;
+    }
 
+    public int getWeight() {
+        return weight;
+    }
+
+    void packageItem() {//+ this.trackNumber +
+        System.out.println("Посылка " + this.description + " упакована.");
+    }
+
+    /*
+    Выдает индивидуальный номер посылке с префиксом указывающим на тип
+    но этого тоже не было в задании
     public String setTrackNumber(TypeParcel typeParcel, int orderNumber) {
         String prefix = switch (typeParcel) {
             case STANDARD -> "STA";
@@ -40,18 +58,19 @@ abstract class Parcel {
         };
         return prefix + orderNumber;
 
-    }
-    void deliver(){
-        System.out.println("Посылка "+ this.trackNumber + " доставлена по адресу "+  this.deliveryAddress +".");
+    }*/
+    void deliver() {//+ this.trackNumber +
+        System.out.println("Посылка " + this.description + " доставлена по адресу " + this.deliveryAddress + " .");
+        System.out.println();
     }
 
-    int calculateDeliveryCost(){
+    int calculateDeliveryCost() {
         int cost = switch (this.typeParcel) {
-            case STANDARD ->  2 ;
-            case FRAGILE-> 3;
-            case PERISHABLE ->  4;
-            default ->  999;
+            case STANDARD -> 2;
+            case FRAGILE -> 3;
+            case PERISHABLE -> 4;
+            default -> 999;
         };
-        return cost* weight ;
+        return cost * weight;
     }
 }

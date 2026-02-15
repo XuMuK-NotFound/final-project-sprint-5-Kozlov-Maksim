@@ -6,7 +6,7 @@ public class PerishableParcel  extends Parcel{//бессмертны посыл
         this.timeToLive = timeToLive;
 
     }
-    boolean isExpired(int currentDay, int sendDay, int timeToLive){
-        return !((sendDay + timeToLive) >= currentDay);
+    boolean isExpired(int currentDay){
+        return !((this.getSendDay() + timeToLive) >= currentDay);
     }
 }

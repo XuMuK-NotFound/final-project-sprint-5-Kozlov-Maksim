@@ -4,10 +4,12 @@ import java.util.Scanner;
 
 public class DeliveryApp {
 
-    private static final Scanner scanner = new Scanner(System.in);
+    public static final Scanner scanner = new Scanner(System.in);
     private static List<Parcel> allParcels = new ArrayList<>();
     private static List<Parcel> allTrackingParcels = new ArrayList<>();
-
+    private static ParcelBox standardBox;
+    private static ParcelBox fragileBox;
+    private static ParcelBox perishableBox;
 
     public static void main(String[] args) {
         boolean running = true;
@@ -28,6 +30,12 @@ public class DeliveryApp {
                 case 4:
                     reportStatus();
                     break;
+                case 5:
+                    doParcelBox();
+                    break;
+                case 6:
+                    printParcelBox();
+                    break;
                 case 0:
                     running = false;
                     break;
@@ -37,12 +45,15 @@ public class DeliveryApp {
         }
     }
 
+
     private static void showMenu() {
         System.out.println("Выберите действие:");
         System.out.println("1 — Добавить посылку");
         System.out.println("2 — Отправить все посылки");
         System.out.println("3 — Посчитать стоимость доставки");
         System.out.println("4 — Показать список с трекингом?");
+        System.out.println("5 — Сложить посылки в коробку");
+        System.out.println("6 — Показать содержимое коробок");
         System.out.println("0 — Завершить");
     }
 
@@ -55,16 +66,14 @@ public class DeliveryApp {
     }
 
 
-
     // реализуйте методы ниже
 
     private static void addParcel() {
         //выбор типа
         typeOrdewrMenu();
         int choice = Integer.parseInt(scanner.nextLine());
-        if(choice == 0 || choice >3){
+        if (choice == 0 || choice > 3) {
             System.out.println("Вы вышли в главное меню.");
-
             return;
         }
         //заполнение
@@ -90,6 +99,7 @@ public class DeliveryApp {
                 newParcel = new FragileParcel(
                         description, weight,
                         deliveryAddress, sendDay);
+
                 allParcels.add(newParcel);
                 allTrackingParcels.add(newParcel);
             }
@@ -102,33 +112,32 @@ public class DeliveryApp {
                         deliveryAddress, sendDay,
                         timeToLive);
                 allParcels.add(newParcel);
-
             }
-
         }
         // Подсказка: спросите тип посылки и необходимые поля, создайте объект и добавьте в allParcels
-
     }
 
-
-    private static  void sendParcels() {
-       for(Parcel parcel : allParcels) {
-           parcel.packageItem();
-           parcel.deliver();
-       }
+    private static void sendParcels() {
+        for (Parcel parcel : allParcels) {
+            parcel.packageItem();
+            parcel.deliver();
+        }
         // Пройти по allParcels, вызвать packageItem() и deliver()
     }
 
     private static void calculateCosts() {
         int sum = 0;
         // Посчитать общую стоимость всех доставок и вывести на экран
-        for(Parcel parcel : allParcels) {
+        for (Parcel parcel : allParcels) {
             sum = sum + parcel.calculateDeliveryCost();
         }
+        System.out.println("Общая сумма доставок:" + sum);
+
     }
+
     private static void reportStatus() {
-        for(Parcel parcel : allTrackingParcels) {
-            System.out.println("Введите текущее местоположение для посылки " + parcel.getTrackNumber() + "':");
+        for (Parcel parcel : allTrackingParcels) {
+            System.out.println("Введите текущее местоположение для посылки " + parcel.getDescription() + "':");
             FragileParcel fragileParcel = (FragileParcel) parcel;
             String newLocation = scanner.nextLine();
             fragileParcel.reportStatus(newLocation);
@@ -136,4 +145,31 @@ public class DeliveryApp {
         }
 
     }
+
+    private static void doParcelBox() {
+            System.out.println("Введите максимальный вес для всех коробок:");
+            int max = Integer.parseInt(scanner.nextLine());
+
+            standardBox = new ParcelBox<>(max, new ArrayList<>());
+            fragileBox = new ParcelBox<>(max, new ArrayList<>());
+            perishableBox = new ParcelBox<>(max, new ArrayList<>());
+
+            for (Parcel p : allParcels) {
+                if (p instanceof StandardParcel) {
+                    standardBox.addParcel(p); // Java сама поймет тип
+                } else if (p instanceof FragileParcel) {
+                    fragileBox.addParcel(p);
+                } else if (p instanceof PerishableParcel) {
+                    perishableBox.addParcel(p);
+                }
+            }
+            System.out.println("Посылки распределены по коробкам.");
+    }
+
+    private static void printParcelBox() {
+            standardBox.getAllParcels();
+            fragileBox.getAllParcels();
+            perishableBox.getAllParcels();
+    }
+
 }
